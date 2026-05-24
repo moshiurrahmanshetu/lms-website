@@ -1,0 +1,203 @@
+@import "tailwindcss";
+
+:root {
+  /* Base Colors - Light Mode */
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  
+  /* Card Colors */
+  --card: #ffffff;
+  --card-foreground: #0a0a0a;
+  
+  /* Primary Colors */
+  --primary: #0a0a0a;
+  --primary-foreground: #fafafa;
+  
+  /* Secondary Colors */
+  --secondary: #f4f4f5;
+  --secondary-foreground: #0a0a0a;
+  
+  /* Muted Colors */
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  
+  /* Accent Colors */
+  --accent: #f4f4f5;
+  --accent-foreground: #0a0a0a;
+  
+  /* Border & Input */
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  
+  /* Ring Focus */
+  --ring: #0a0a0a;
+  
+  /* Semantic Colors */
+  --success: #22c55e;
+  --success-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #ffffff;
+  --error: #ef4444;
+  --error-foreground: #ffffff;
+  --info: #3b82f6;
+  --info-foreground: #ffffff;
+  
+  /* Brand Colors */
+  --brand: #6366f1;
+  --brand-foreground: #ffffff;
+  --brand-light: #818cf8;
+  --brand-dark: #4f46e5;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-error: var(--error);
+  --color-error-foreground: var(--error-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-light: var(--brand-light);
+  --color-brand-dark: var(--brand-dark);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Base Colors - Dark Mode */
+    --background: #09090b;
+    --foreground: #fafafa;
+    
+    /* Card Colors */
+    --card: #09090b;
+    --card-foreground: #fafafa;
+    
+    /* Primary Colors */
+    --primary: #fafafa;
+    --primary-foreground: #09090b;
+    
+    /* Secondary Colors */
+    --secondary: #27272a;
+    --secondary-foreground: #fafafa;
+    
+    /* Muted Colors */
+    --muted: #27272a;
+    --muted-foreground: #a1a1aa;
+    
+    /* Accent Colors */
+    --accent: #27272a;
+    --accent-foreground: #fafafa;
+    
+    /* Border & Input */
+    --border: #27272a;
+    --input: #27272a;
+    
+    /* Ring Focus */
+    --ring: #d4d4d8;
+    
+    /* Semantic Colors - Dark Mode */
+    --success: #22c55e;
+    --success-foreground: #ffffff;
+    --warning: #f59e0b;
+    --warning-foreground: #ffffff;
+    --error: #ef4444;
+    --error-foreground: #ffffff;
+    --info: #3b82f6;
+    --info-foreground: #ffffff;
+    
+    /* Brand Colors - Dark Mode */
+    --brand: #818cf8;
+    --brand-foreground: #ffffff;
+    --brand-light: #a5b4fc;
+    --brand-dark: #6366f1;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  border-color: var(--border);
+}
+
+/* Smooth transitions */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Disable transitions for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0ms !important;
+    transition-property: none !important;
+  }
+}
+
+/* Spacing utilities */
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    max-width: 640px;
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+    padding-right: 2rem;
+    padding-left: 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1536px;
+  }
+}
