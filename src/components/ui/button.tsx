@@ -18,7 +18,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             // Secondary variant - subtle border animation
             "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm hover:shadow-md hover:-translate-y-0.5": variant === "secondary",
             // Outline variant - elegant hover fill
-            "border border-border bg-background hover:bg-accent hover:text-accent-foreground hover:border-accent/50 shadow-sm hover:shadow-md hover:-translate-y-0.5": variant === "outline",
+            "border border-border bg-background hover:bg-accent hover:text-accent-foreground hover:border-accent/50 shadow-sm hover:shadow-md": variant === "outline",
             // Ghost variant - elegant hover fill
             "hover:bg-accent hover:text-accent-foreground hover:-translate-y-0.5": variant === "ghost",
             // Brand variant - glow effect

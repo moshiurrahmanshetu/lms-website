@@ -162,7 +162,10 @@ const TestimonialSlider = () => {
                   className="relative will-change-transform"
                   style={{ willChange: "transform, opacity" }}
                 >
-                  <Card variant="glass" className="p-8 md:p-12 shadow-2xl">
+                  <Card 
+                    variant="default" 
+                    className="p-8 md:p-12 shadow-2xl border border-border/50 bg-glass-bg backdrop-blur-md hover:shadow-2xl hover:translate-y-0 hover:border-border/50"
+                  >
                     <CardContent className="pt-6">
                       {/* Rating */}
                       <div className="flex items-center gap-1 mb-6">
@@ -200,7 +203,7 @@ const TestimonialSlider = () => {
             <Button
               variant="outline"
               size="icon"
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 md:-translate-x-14 bg-white/10 dark:bg-slate-800/95 backdrop-blur-md border-2 border-border shadow-xl hover:shadow-2xl hover:scale-110 transition-all duration-300 z-20"
+              className="absolute left-0 top-1/2  -translate-x-1 md:-translate-x-14 bg-white/10 dark:bg-slate-800/95 backdrop-blur-md border-2 border-border shadow-xl hover:shadow-2xl hover:bg-white/20 dark:hover:bg-slate-700/95 hover:border-brand/50 transition-all duration-300 z-20"
               onClick={prevSlide}
               aria-label="Previous testimonial"
             >
@@ -209,7 +212,7 @@ const TestimonialSlider = () => {
             <Button
               variant="outline"
               size="icon"
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 md:translate-x-14 bg-white/10 dark:bg-slate-800/95 backdrop-blur-md border-2 border-border shadow-xl hover:shadow-2xl hover:scale-110 transition-all duration-300 z-20"
+              className="absolute right-0 top-1/2  translate-x-1 md:translate-x-14 bg-white/10 dark:bg-slate-800/95 backdrop-blur-md border-2 border-border shadow-xl hover:shadow-2xl hover:bg-white/20 dark:hover:bg-slate-700/95 hover:border-brand/50 transition-all duration-300 z-20"
               onClick={nextSlide}
               aria-label="Next testimonial"
             >
