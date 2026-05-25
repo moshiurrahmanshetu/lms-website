@@ -24,7 +24,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             // Brand variant
             "bg-brand-600 text-white hover:bg-brand-700 shadow-md": variant === "brand",
             // Brand gradient variant
-            "bg-gradient-primary text-white hover:opacity-90 shadow-md": variant === "brand-gradient",
+            "bg-gradient-primary bg-card hover:opacity-90 shadow-md": variant === "brand-gradient",
             // Success variant
             "bg-success text-success-foreground hover:bg-success/90 shadow-sm": variant === "success",
             // Warning variant

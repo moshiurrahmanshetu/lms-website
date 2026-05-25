@@ -37,7 +37,7 @@ const Hero = () => {
         <div className="max-w-6xl mx-auto text-center space-y-16">
           {/* Badge */}
           <motion.div variants={staggerItem} className="inline-flex">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border border-border/50 shadow-lg hover:shadow-xl transition-shadow">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full  bg-card dark:bg-slate-800/80 backdrop-blur-md border border-border/50 shadow-lg hover:shadow-xl transition-shadow">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-500" />
@@ -50,7 +50,7 @@ const Hero = () => {
 
           {/* Heading */}
           <motion.div variants={staggerItem} className="space-y-6">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-tight">
+            <h1 className="text-5xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
               <span className="bg-gradient-to-r from-brand-600 via-violet-600 to-brand-600 bg-clip-text text-transparent animate-gradient bg-300% bg-[length:200%_auto]">
                 Master New Skills
               </span>
