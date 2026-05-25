@@ -19,17 +19,11 @@ const LearningBenefits = () => {
         {benefits.map((benefit, index) => (
           <div
             key={index}
-            className="group p-6 rounded-lg bg-card border border-border hover:border-brand/50 hover:shadow-lg transition-all duration-300"
+            className="group p-6 rounded-lg bg-card border border-border hover:border-brand/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 shimmer"
           >
-            <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
-              {benefit.icon}
-            </div>
-            <h3 className="text-lg font-semibold mb-2 group-hover:text-brand transition-colors">
-              {benefit.title}
-            </h3>
-            <p className="text-muted-foreground leading-relaxed">
-              {benefit.description}
-            </p>
+            <div className="text-4xl mb-4 icon-bounce">{benefit.icon}</div>
+            <h3 className="text-lg font-semibold mb-2 group-hover:text-brand transition-colors duration-300">{benefit.title}</h3>
+            <p className="text-muted-foreground leading-relaxed">{benefit.description}</p>
           </div>
         ))}
       </div>
