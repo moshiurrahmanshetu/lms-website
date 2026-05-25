@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { CountUp, parseValueString } from "@/components/ui/count-up";
 import { staggerContainer, staggerItem } from "@/lib/animations/presets";
 import {
   Star,
@@ -132,12 +133,24 @@ export default function SuccessStoriesPage() {
                 { value: "$50M+", label: "Total Salary Increase" },
                 { value: "95%", label: "Job Placement Rate" },
                 { value: "150+", label: "Countries Represented" },
-              ].map((stat, index) => (
-                <div key={index} className="text-center">
-                  <div className="text-5xl font-bold text-foreground mb-2">{stat.value}</div>
-                  <div className="text-muted-foreground">{stat.label}</div>
-                </div>
-              ))}
+              ].map((stat, index) => {
+                const { number, suffix, prefix, decimals } = parseValueString(stat.value);
+                return (
+                  <div key={index} className="text-center">
+                    <div className="text-5xl font-bold text-foreground mb-2">
+                      <CountUp
+                        end={number}
+                        suffix={suffix}
+                        prefix={prefix}
+                        decimals={decimals}
+                        duration={2}
+                        className="text-5xl font-bold text-foreground"
+                      />
+                    </div>
+                    <div className="text-muted-foreground">{stat.label}</div>
+                  </div>
+                );
+              })}
             </motion.div>
           </motion.div>
         </div>
@@ -347,15 +360,27 @@ export default function SuccessStoriesPage() {
                 { icon: Target, label: "500K+ Courses Completed", desc: "With 98% satisfaction" },
                 { icon: Award, label: "50K+ Certificates", desc: "Issued to date" },
                 { icon: Quote, label: "10K+ Reviews", desc: "4.9 average rating" },
-              ].map((item, index) => (
-                <Card key={index} variant="glass" className="text-center p-6">
-                  <CardContent className="pt-6 space-y-4">
-                    <item.icon className="h-8 w-8 text-brand-600 dark:text-brand-400 mx-auto" />
-                    <h3 className="text-2xl font-bold text-foreground">{item.label}</h3>
-                    <p className="text-sm text-muted-foreground">{item.desc}</p>
-                  </CardContent>
-                </Card>
-              ))}
+              ].map((item, index) => {
+                const { number, suffix, prefix, decimals } = parseValueString(item.label);
+                return (
+                  <Card key={index} variant="glass" className="text-center p-6">
+                    <CardContent className="pt-6 space-y-4">
+                      <item.icon className="h-8 w-8 text-brand-600 dark:text-brand-400 mx-auto" />
+                      <h3 className="text-2xl font-bold text-foreground">
+                        <CountUp
+                          end={number}
+                          suffix={suffix}
+                          prefix={prefix}
+                          decimals={decimals}
+                          duration={2}
+                          className="text-2xl font-bold text-foreground"
+                        />
+                      </h3>
+                      <p className="text-sm text-muted-foreground">{item.desc}</p>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </motion.div>
           </motion.div>
         </div>

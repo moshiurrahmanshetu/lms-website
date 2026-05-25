@@ -200,7 +200,7 @@ const TestimonialSlider = () => {
             <Button
               variant="outline"
               size="icon"
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 md:-translate-x-14 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border-2 border-border shadow-xl hover:shadow-2xl hover:scale-110 transition-all duration-300 z-20"
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 md:-translate-x-14 bg-white/10 dark:bg-slate-800/95 backdrop-blur-md border-2 border-border shadow-xl hover:shadow-2xl hover:scale-110 transition-all duration-300 z-20"
               onClick={prevSlide}
               aria-label="Previous testimonial"
             >
@@ -209,7 +209,7 @@ const TestimonialSlider = () => {
             <Button
               variant="outline"
               size="icon"
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 md:translate-x-14 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border-2 border-border shadow-xl hover:shadow-2xl hover:scale-110 transition-all duration-300 z-20"
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1 md:translate-x-14 bg-white/10 dark:bg-slate-800/95 backdrop-blur-md border-2 border-border shadow-xl hover:shadow-2xl hover:scale-110 transition-all duration-300 z-20"
               onClick={nextSlide}
               aria-label="Next testimonial"
             >

@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { CountUp, parseValueString } from "@/components/ui/count-up";
 import { heroData } from "@/constants/homepage";
 import { fadeUp, fadeIn, staggerContainer, staggerItem } from "@/lib/animations/presets";
 import { BookOpen, Users, Award, Clock, Sparkles } from "lucide-react";
@@ -95,24 +96,42 @@ const Hero = () => {
               { icon: Users, value: "50K+", label: "Students" },
               { icon: Award, value: "98%", label: "Success Rate" },
               { icon: Clock, value: "24/7", label: "Support" },
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                variants={staggerItem}
-                whileHover={{ y: -12, transition: { duration: 0.3, ease: "easeOut" } }}
-                className="relative group"
-              >
-                <div className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-15 transition-opacity duration-300 rounded-2xl blur-sm" />
-                <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg border border-border/50 rounded-2xl p-6 shadow-lg group-hover:shadow-2xl transition-all duration-300">
-                  <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Sparkles className="h-4 w-4 text-white" />
+            ].map((stat, index) => {
+              const { number, suffix, prefix, decimals } = parseValueString(stat.value);
+              const isSpecial = stat.value === "24/7"; // Handle special case for 24/7
+              
+              return (
+                <motion.div
+                  key={index}
+                  variants={staggerItem}
+                  whileHover={{ y: -12, transition: { duration: 0.3, ease: "easeOut" } }}
+                  className="relative group"
+                >
+                  <div className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-15 transition-opacity duration-300 rounded-2xl blur-sm" />
+                  <div className="relative bg-white/10 dark:bg-slate-800/90 backdrop-blur-lg border border-border/50 rounded-2xl p-6 shadow-lg group-hover:shadow-2xl transition-all duration-300">
+                    <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Sparkles className="h-4 w-4 text-white" />
+                    </div>
+                    <stat.icon className="h-7 w-7 text-brand-600 dark:text-brand-400 mb-3" />
+                    <div className="text-4xl font-bold text-foreground mb-1">
+                      {isSpecial ? (
+                        stat.value
+                      ) : (
+                        <CountUp
+                          end={number}
+                          suffix={suffix}
+                          prefix={prefix}
+                          decimals={decimals}
+                          duration={2}
+                          className="text-4xl font-bold text-foreground"
+                        />
+                      )}
+                    </div>
+                    <div className="text-sm text-muted-foreground font-medium">{stat.label}</div>
                   </div>
-                  <stat.icon className="h-7 w-7 text-brand-600 dark:text-brand-400 mb-3" />
-                  <div className="text-4xl font-bold text-foreground mb-1">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground font-medium">{stat.label}</div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </motion.div>
         </div>
       </motion.div>

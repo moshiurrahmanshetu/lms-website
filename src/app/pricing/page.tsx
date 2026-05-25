@@ -321,7 +321,7 @@ export default function PricingPage() {
               <Button
                 variant="secondary"
                 size="lg"
-                className="bg-white text-brand-600 hover:bg-white/90"
+                className=" text-brand-600 hover:bg-white/90"
               >
                 Start Free Trial
               </Button>

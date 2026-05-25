@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { CountUp, parseValueString } from "@/components/ui/count-up";
 import { staggerContainer, staggerItem } from "@/lib/animations/presets";
 import {
   Target,
@@ -144,12 +145,24 @@ export default function AboutPage() {
                 { value: "500+", label: "Courses" },
                 { value: "150+", label: "Countries" },
                 { value: "98%", label: "Satisfaction" },
-              ].map((stat, index) => (
-                <div key={index} className="text-center">
-                  <div className="text-5xl font-bold text-foreground mb-2">{stat.value}</div>
-                  <div className="text-muted-foreground">{stat.label}</div>
-                </div>
-              ))}
+              ].map((stat, index) => {
+                const { number, suffix, prefix, decimals } = parseValueString(stat.value);
+                return (
+                  <div key={index} className="text-center">
+                    <div className="text-5xl font-bold text-foreground mb-2">
+                      <CountUp
+                        end={number}
+                        suffix={suffix}
+                        prefix={prefix}
+                        decimals={decimals}
+                        duration={2}
+                        className="text-5xl font-bold text-foreground"
+                      />
+                    </div>
+                    <div className="text-muted-foreground">{stat.label}</div>
+                  </div>
+                );
+              })}
             </motion.div>
           </motion.div>
         </div>
@@ -289,7 +302,7 @@ export default function AboutPage() {
                 Join millions of learners already transforming their careers with LMS Platform.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button variant="secondary" size="lg" className="bg-white text-brand-600 hover:bg-white/90">
+                <Button variant="secondary" size="lg" className="border bg-background text-brand-600 hover:bg-white/90">
                   Get Started Free
                 </Button>
                 <Button variant="outline" size="lg" className="bg-transparent border-white text-white hover:bg-white/10">

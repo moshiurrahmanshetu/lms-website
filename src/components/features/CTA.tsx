@@ -23,7 +23,7 @@ const CTA = () => {
             {ctaData.description}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-            <Button variant="default" size="lg" className="bg-white text-brand hover:bg-white/90">
+            <Button variant="default" size="lg" className="text-brand hover:bg-white/90">
               {ctaData.primary}
             </Button>
             <Button variant="outline" size="lg" className="border-white text-brand-foreground hover:bg-white/10">
