@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --color-dark-mode: class;
+}
+
 :root {
   /* Brand Colors - Indigo/Violet Palette */
   --brand-50: #eef2ff;

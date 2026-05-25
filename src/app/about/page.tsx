@@ -25,8 +25,8 @@ export default function AboutPage() {
       {/* Hero Section */}
       <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-brand-50 via-white to-violet-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-brand-400/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-violet-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-brand-500/10 dark:bg-brand-500/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-violet-500/10 dark:bg-violet-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
         
         <motion.div
           initial="hidden"
@@ -116,7 +116,7 @@ export default function AboutPage() {
               <motion.div
                 animate={{ y: [0, -20, 0] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-4 -right-4 w-20 h-20 bg-brand-500/10 rounded-full blur-xl"
+                className="absolute -top-4 -right-4 w-20 h-20 bg-brand-500/10 dark:bg-brand-500/20 rounded-full blur-xl"
               />
             </motion.div>
           </motion.div>
@@ -254,7 +254,7 @@ export default function AboutPage() {
               ].map((member, index) => (
                 <Card key={index} variant="glass" className="text-center p-6">
                   <CardContent className="pt-6 space-y-4">
-                    <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-brand-200 to-violet-200 dark:from-slate-700 dark:to-slate-600 flex items-center justify-center">
+                    <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-brand-100 to-violet-100 dark:from-slate-700 dark:to-slate-600 flex items-center justify-center">
                       <Users className="h-12 w-12 text-brand-600 dark:text-brand-400" />
                     </div>
                     <h3 className="text-lg font-semibold text-foreground">{member.name}</h3>
