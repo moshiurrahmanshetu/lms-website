@@ -2,7 +2,7 @@ import React from "react";
 import { cn } from "@/lib/utils/cn";
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "default" | "outlined" | "elevated" | "flat";
+  variant?: "default" | "outlined" | "elevated" | "flat" | "glass";
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
@@ -10,12 +10,13 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     <div
       ref={ref}
       className={cn(
-        "rounded-lg bg-card text-card-foreground transition-all",
+        "rounded-2xl bg-card text-card-foreground transition-all duration-200",
         {
-          "border shadow-sm": variant === "default",
-          "border-2 border-border": variant === "outlined",
-          "shadow-lg border": variant === "elevated",
-          "border-none": variant === "flat",
+          "border border-border shadow-md": variant === "default",
+          "border-2 border-border shadow-sm": variant === "outlined",
+          "shadow-lg border border-border": variant === "elevated",
+          "border-none shadow-sm": variant === "flat",
+          "border border-border/50 bg-glass-bg backdrop-blur-md shadow-lg": variant === "glass",
         },
         className
       )}
@@ -36,7 +37,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn("text-xl font-semibold leading-none tracking-tight", className)}
+      className={cn("text-2xl font-semibold leading-none tracking-tight", className)}
       {...props}
     />
   )

@@ -1,79 +1,136 @@
+"use client";
+
 import React from "react";
-import { Section } from "@/components/ui/section";
-import { Heading } from "@/components/ui/heading";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { featuredCourses } from "@/constants/homepage";
+import { staggerContainer, staggerItem } from "@/lib/animations/presets";
+import { Star, Clock, Users, BookOpen } from "lucide-react";
 
 const FeaturedCourses = () => {
   return (
-    <Section size="lg" centered>
-      <div className="text-center space-y-4 mb-12">
-        <Heading level="h2" size="xl">
-          Featured Courses
-        </Heading>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          Explore our most popular courses handpicked by our expert instructors
-        </p>
-      </div>
+    <section className="section-py">
+      <div className="container">
+        {/* Section Header */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
+          className="text-center space-y-4 mb-16"
+        >
+          <motion.h2 variants={staggerItem} className="text-h2 text-foreground">
+            Featured Courses
+          </motion.h2>
+          <motion.p
+            variants={staggerItem}
+            className="text-muted-foreground max-w-2xl mx-auto text-lg"
+          >
+            Explore our most popular courses handpicked by our expert instructors
+          </motion.p>
+        </motion.div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {featuredCourses.map((course) => (
-          <Card key={course.id} variant="elevated" className="group hover:shadow-xl transition-all duration-300">
-            {/* Thumbnail Placeholder */}
-            <div className="aspect-video bg-secondary rounded-t-lg flex items-center justify-center overflow-hidden">
-              <div className="w-full h-full bg-gradient-to-br from-brand/20 to-brand/5 flex items-center justify-center">
-                <span className="text-4xl">📚</span>
-              </div>
-            </div>
-
-            <CardHeader className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-brand bg-brand/10 px-2 py-1 rounded-full">
-                  {course.category}
-                </span>
-                <span className="text-xs text-muted-foreground">{course.level}</span>
-              </div>
-              <CardTitle className="line-clamp-2 group-hover:text-brand transition-colors">
-                {course.title}
-              </CardTitle>
-            </CardHeader>
-
-            <CardContent className="space-y-3">
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                {course.description}
-              </p>
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center space-x-1">
-                  <span className="text-yellow-500">⭐</span>
-                  <span className="font-medium">{course.rating}</span>
+        {/* Course Grid */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          {featuredCourses.map((course, index) => (
+            <motion.div key={course.id} variants={staggerItem}>
+              <Card
+                variant="glass"
+                className="group overflow-hidden hover:shadow-2xl transition-all duration-300"
+              >
+                {/* Image Section */}
+                <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-brand-100 to-violet-100 dark:from-slate-800 dark:to-slate-700">
+                  <div className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-10 transition-opacity" />
+                  <div className="w-full h-full flex items-center justify-center">
+                    <BookOpen className="h-16 w-16 text-brand-600 dark:text-brand-400" />
+                  </div>
+                  
+                  {/* Badges */}
+                  <div className="absolute top-4 left-4 flex gap-2">
+                    <span className="px-3 py-1 text-xs font-medium bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-full text-brand-600 dark:text-brand-400 shadow-sm">
+                      {course.category}
+                    </span>
+                    <span className="px-3 py-1 text-xs font-medium bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-full text-foreground shadow-sm">
+                      {course.level}
+                    </span>
+                  </div>
                 </div>
-                <span className="text-muted-foreground">{course.students.toLocaleString()} students</span>
-              </div>
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <span>👤 {course.instructor}</span>
-                <span>⏱️ {course.duration}</span>
-              </div>
-            </CardContent>
 
-            <CardFooter className="flex items-center justify-between pt-4">
-              <div className="text-2xl font-bold text-foreground">
-                ${course.price}
-              </div>
-              <Button variant="brand" size="sm">
-                Enroll Now
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+                <CardContent className="p-6 space-y-4">
+                  {/* Title */}
+                  <h3 className="text-xl font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors">
+                    {course.title}
+                  </h3>
 
-      <div className="text-center mt-12">
-        <Button variant="outline" size="lg">
-          View All Courses
-        </Button>
+                  {/* Description */}
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {course.description}
+                  </p>
+
+                  {/* Stats */}
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-1">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <span className="font-medium text-foreground">{course.rating}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-muted-foreground">
+                      <Users className="h-4 w-4" />
+                      <span>{course.students.toLocaleString()}</span>
+                    </div>
+                  </div>
+
+                  {/* Meta */}
+                  <div className="flex items-center justify-between text-sm text-muted-foreground pt-2 border-t border-border/50">
+                    <span className="flex items-center gap-1">
+                      <Users className="h-4 w-4" />
+                      {course.instructor}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="h-4 w-4" />
+                      {course.duration}
+                    </span>
+                  </div>
+                </CardContent>
+
+                <CardFooter className="p-6 pt-0 flex items-center justify-between">
+                  <div className="flex flex-col">
+                    <span className="text-xs text-muted-foreground">Price</span>
+                    <span className="text-2xl font-bold text-foreground">${course.price}</span>
+                  </div>
+                  <Button
+                    variant="brand-gradient"
+                    size="sm"
+                    className="shadow-lg shadow-brand-500/25 group-hover:shadow-xl group-hover:shadow-brand-500/30 transition-all"
+                  >
+                    Enroll Now
+                  </Button>
+                </CardFooter>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* View All Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ delay: 0.4 }}
+          className="text-center mt-16"
+        >
+          <Button variant="outline" size="lg" className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm">
+            View All Courses
+          </Button>
+        </motion.div>
       </div>
-    </Section>
+    </section>
   );
 };
 
