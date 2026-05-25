@@ -48,7 +48,7 @@ const MainNavbar = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <span className="font-bold text-lg">L</span>
+            <span className="font-bold text-lg text-blue-600 ">L</span>
           </motion.div>
           <span className="font-semibold text-lg tracking-tight group-hover:text-primary transition-colors">
             LMS Platform

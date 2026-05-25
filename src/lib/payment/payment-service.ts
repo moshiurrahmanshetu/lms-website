@@ -267,6 +267,7 @@ class ManualGatewayService {
       success: true,
       paymentUrl: null,
       transactionId: `MANUAL-${Date.now()}`,
+      error: null as string | null,
     };
   }
 
@@ -275,6 +276,7 @@ class ManualGatewayService {
       success: true,
       status: PaymentStatus.COMPLETED,
       transactionId: request.transactionId,
+      error: null as string | null,
     };
   }
 }

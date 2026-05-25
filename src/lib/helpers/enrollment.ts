@@ -1,4 +1,5 @@
 import { getUserEnrollment, isUserEnrolled, canAccessLesson } from "@/lib/enrollment";
+import { Lesson } from "@prisma/client";
 
 export async function getEnrollmentStatus(userId: string, courseId: string) {
   const enrollment = await getUserEnrollment(userId, courseId);
@@ -28,7 +29,7 @@ export async function getAccessibleLessons(userId: string, courseId: string) {
 
   const enrolled = await isUserEnrolled(userId, courseId);
 
-  return lessons.map((lesson) => ({
+  return lessons.map((lesson: Lesson) => ({
     ...lesson,
     accessible: lesson.isFree || enrolled,
   }));
