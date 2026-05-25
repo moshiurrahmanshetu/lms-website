@@ -157,5 +157,5 @@ export const ctaData = {
   title: "Ready to Start Your Learning Journey?",
   description: "Join over 50,000 learners who are already transforming their careers. Get unlimited access to all courses today.",
   primary: "Get Started Free",
-  secondary: "View Pricing",
+  secondary: "View Courses",
 };
