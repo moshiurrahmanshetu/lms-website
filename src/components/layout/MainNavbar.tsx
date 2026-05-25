@@ -16,6 +16,7 @@ const MainNavbar = () => {
   const pathname = usePathname();
 
   const navLinks = [
+    { name: "Home", href: "/" },
     { name: "Courses", href: "/courses" },
     { name: "About", href: "/about" },
     { name: "Pricing", href: "/pricing" },

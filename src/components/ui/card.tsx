@@ -10,13 +10,18 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     <div
       ref={ref}
       className={cn(
-        "rounded-2xl bg-card text-card-foreground transition-all duration-200",
+        "rounded-2xl bg-card text-card-foreground transition-all duration-300",
         {
-          "border border-border shadow-md": variant === "default",
-          "border-2 border-border shadow-sm": variant === "outlined",
-          "shadow-lg border border-border": variant === "elevated",
-          "border-none shadow-sm": variant === "flat",
-          "border border-border/50 bg-glass-bg backdrop-blur-md shadow-lg": variant === "glass",
+          // Default variant - subtle lift and border glow
+          "border border-border shadow-md hover:shadow-xl hover:-translate-y-1 hover:border-brand/30": variant === "default",
+          // Outlined variant - border animation
+          "border-2 border-border shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-brand/50": variant === "outlined",
+          // Elevated variant - enhanced lift
+          "shadow-lg border border-border hover:shadow-2xl hover:-translate-y-2 hover:border-brand/40": variant === "elevated",
+          // Flat variant - subtle scale
+          "border-none shadow-sm hover:shadow-md hover:scale-[1.01]": variant === "flat",
+          // Glass variant - glow effect
+          "border border-border/50 bg-glass-bg backdrop-blur-md shadow-lg hover:shadow-2xl hover:-translate-y-1 hover:border-brand/40 hover-glow": variant === "glass",
         },
         className
       )}
