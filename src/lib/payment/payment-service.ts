@@ -265,9 +265,9 @@ class ManualGatewayService {
   async createPayment(request: any) {
     return {
       success: true,
-      paymentUrl: null,
+      paymentUrl: undefined,
       transactionId: `MANUAL-${Date.now()}`,
-      error: null as string | null,
+      error: undefined,
     };
   }
 
@@ -276,7 +276,7 @@ class ManualGatewayService {
       success: true,
       status: PaymentStatus.COMPLETED,
       transactionId: request.transactionId,
-      error: null as string | null,
+      error: undefined,
     };
   }
 }

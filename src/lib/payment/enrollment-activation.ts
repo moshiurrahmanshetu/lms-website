@@ -14,7 +14,7 @@ export class EnrollmentActivationService {
         },
       });
 
-      if (!payment || !payment.enrollmentId) {
+      if (!payment || !payment.enrollmentId || !payment.enrollment) {
         console.error("Payment or enrollment not found");
         return false;
       }
@@ -69,7 +69,7 @@ export class EnrollmentActivationService {
         },
       });
 
-      if (!payment || !payment.liveClassEnrollmentId) {
+      if (!payment || !payment.liveClassEnrollmentId || !payment.liveClassEnrollment) {
         console.error("Payment or live class enrollment not found");
         return false;
       }
