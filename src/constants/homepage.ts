@@ -26,7 +26,7 @@ export const featuredCourses = [
     duration: "42 hours",
     level: "Beginner",
     price: 89.99,
-    thumbnail: "/placeholder-course-1.jpg",
+    thumbnail: "/img/developer.jpg",
     category: "Development",
   },
   {
@@ -39,7 +39,7 @@ export const featuredCourses = [
     duration: "28 hours",
     level: "Intermediate",
     price: 79.99,
-    thumbnail: "/placeholder-course-2.jpg",
+    thumbnail: "/img/uiux.jpg",
     category: "Design",
   },
   {
@@ -52,7 +52,7 @@ export const featuredCourses = [
     duration: "56 hours",
     level: "Advanced",
     price: 99.99,
-    thumbnail: "/placeholder-course-3.jpg",
+    thumbnail: "/img/python.jpg",
     category: "Data Science",
   },
 ];

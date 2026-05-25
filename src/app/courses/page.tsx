@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import Image from "next/image";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -118,11 +119,16 @@ export default function CoursesPage() {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredCourses.map((course) => (
           <Card key={course.id} variant="elevated" className="group hover:shadow-xl transition-all duration-300 flex flex-col">
-            {/* Thumbnail Placeholder */}
-            <div className="aspect-video bg-secondary rounded-t-lg flex items-center justify-center overflow-hidden">
-              <div className="w-full h-full bg-gradient-to-br from-brand/20 to-brand/5 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                <span className="text-4xl">📚</span>
-              </div>
+            {/* Thumbnail */}
+            <div className="aspect-video bg-secondary rounded-t-lg overflow-hidden relative">
+              <Image
+                src={course.thumbnail || "/img/developer.jpg"}
+                alt={course.title}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover transition-transform duration-400 ease-out group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60" />
               {course.featured && (
                 <div className="absolute top-3 left-3 flex items-center space-x-2 bg-brand/90 backdrop-blur px-3 py-1 rounded-full">
                   <span className="text-xs text-white font-medium">⭐ Featured</span>

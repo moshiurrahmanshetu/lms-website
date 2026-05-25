@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { featuredCourses } from "@/constants/homepage";
@@ -47,10 +48,16 @@ const FeaturedCourses = () => {
               >
                 {/* Image Section */}
                 <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-brand-100 to-violet-100 dark:from-slate-800 dark:to-slate-700">
+                  <Image
+                    src={course.thumbnail}
+                    alt={course.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-400 ease-out group-hover:scale-105"
+                    priority={index < 3}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-80" />
                   <div className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-10 transition-opacity" />
-                  <div className="w-full h-full flex items-center justify-center">
-                    <BookOpen className="h-16 w-16 text-brand-600 dark:text-brand-400" />
-                  </div>
                   
                   {/* Badges */}
                   <div className="absolute top-4 left-4 flex gap-2">
