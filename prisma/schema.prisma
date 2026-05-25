@@ -27,6 +27,7 @@ model User {
   progress      CourseProgress[]
   reviews       CourseReview[]
   certificates  Certificate[]
+  liveClassEnrollments LiveClassEnrollment[] @relation("LiveClassEnrollments")
 }
 
 enum UserRole {
@@ -197,8 +198,23 @@ model LiveClass {
 
   // Relations
   course        Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  enrollments   LiveClassEnrollment[] @relation("LiveClassEnrollments")
 
   @@unique([courseId, slug])
+}
+
+// LiveClassEnrollment model - represents user enrollments in live classes
+model LiveClassEnrollment {
+  id         String   @id @default(cuid())
+  userId     String
+  liveClassId String
+  enrolledAt DateTime @default(now())
+
+  // Relations
+  user       User     @relation("LiveClassEnrollments", fields: [userId], references: [id], onDelete: Cascade)
+  liveClass  LiveClass @relation("LiveClassEnrollments", fields: [liveClassId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, liveClassId])
 }
 
 enum LiveClassStatus {
