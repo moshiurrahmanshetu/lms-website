@@ -28,6 +28,7 @@ model User {
   reviews       CourseReview[]
   certificates  Certificate[]
   liveClassEnrollments LiveClassEnrollment[] @relation("LiveClassEnrollments")
+  payments      Payment[]
 }
 
 enum UserRole {
@@ -145,6 +146,7 @@ model Enrollment {
   course      Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
   progress    CourseProgress?
   certificate Certificate?
+  payment     Payment?
 
   @@unique([userId, courseId])
 }
@@ -213,6 +215,7 @@ model LiveClassEnrollment {
   // Relations
   user       User     @relation("LiveClassEnrollments", fields: [userId], references: [id], onDelete: Cascade)
   liveClass  LiveClass @relation("LiveClassEnrollments", fields: [liveClassId], references: [id], onDelete: Cascade)
+  payment    Payment?
 
   @@unique([userId, liveClassId])
 }
@@ -256,4 +259,52 @@ model Certificate {
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   course         Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   enrollment     Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+}
+
+// Payment model - represents payment transactions
+model Payment {
+  id                String         @id @default(cuid())
+  userId            String
+  enrollmentId      String?       @unique
+  liveClassEnrollmentId String?  @unique
+  amount            Decimal       @db.Decimal(10, 2)
+  currency          String         @default("BDT")
+  paymentMethod     PaymentMethod
+  paymentGateway    PaymentGateway
+  transactionId     String?        @unique
+  gatewayResponse   String?        @db.Text
+  status            PaymentStatus  @default(PENDING)
+  paidAt            DateTime?
+  failedAt          DateTime?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  // Relations
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enrollment        Enrollment?    @relation(fields: [enrollmentId], references: [id], onDelete: SetNull)
+  liveClassEnrollment LiveClassEnrollment? @relation(fields: [liveClassEnrollmentId], references: [id], onDelete: SetNull)
+}
+
+enum PaymentMethod {
+  BKASH
+  SSLCOMMERZ
+  CREDIT_CARD
+  BANK_TRANSFER
+  CASH
+}
+
+enum PaymentGateway {
+  BKASH
+  SSLCOMMERZ
+  STRIPE
+  MANUAL
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELLED
 }
