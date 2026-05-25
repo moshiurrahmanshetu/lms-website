@@ -432,7 +432,7 @@ body {
   position: absolute;
   inset: -2px;
   border-radius: inherit;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #575afc 0%, #9a76ee 100%);
   opacity: 0;
   transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: -1;
@@ -440,7 +440,7 @@ body {
 }
 
 .hover-glow:hover::before {
-  opacity: 0.3;
+  opacity: 0.1;
 }
 
 .hover-scale {
