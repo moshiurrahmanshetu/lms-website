@@ -1,33 +1,36 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { formatDuration } from "@/lib/helpers/courseHelpers";
+import { sampleCourses } from "@/data/sampleCourses";
+import { getCourseBySlug, getLessonBySlug, getNextLesson, getPreviousLesson, formatDuration } from "@/lib/helpers/courseHelpers";
 
-interface LessonViewerClientProps {
-  course: any;
-  lesson: any;
-  canAccess: boolean;
-  accessReason?: string;
-  userId: string;
-}
-
-export default function LessonViewerClient({
-  course,
-  lesson,
-  canAccess,
-  accessReason,
-  userId,
-}: LessonViewerClientProps) {
+export default function LessonViewerPage() {
+  const params = useParams();
   const router = useRouter();
+  const courseSlug = params.slug as string;
+  const lessonSlug = params.lessonSlug as string;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const nextLesson = course.lessons.find((l: any) => l.order === lesson.order + 1);
-  const previousLesson = course.lessons.find((l: any) => l.order === lesson.order - 1);
-  const isLocked = !canAccess;
+  const course = getCourseBySlug(sampleCourses, courseSlug);
+  const lesson = course ? getLessonBySlug(course, lessonSlug) : undefined;
+
+  if (!course || !lesson) {
+    return (
+      <div className="container py-16 text-center">
+        <h1 className="text-2xl font-bold mb-4">Lesson Not Found</h1>
+        <p className="text-muted-foreground">The lesson you're looking for doesn't exist.</p>
+      </div>
+    );
+  }
+
+  const nextLesson = getNextLesson(course, lesson.id);
+  const previousLesson = getPreviousLesson(course, lesson.id);
+  const isLocked = lesson.isLocked;
+  const isFree = lesson.isFree;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -63,9 +66,8 @@ export default function LessonViewerClient({
               <LessonList
                 course={course}
                 currentLessonId={lesson.id}
-                canAccess={canAccess}
                 onLessonClick={(lessonSlug) => {
-                  router.push(`/courses/${course.slug}/lessons/${lessonSlug}`);
+                  router.push(`/courses/${courseSlug}/lessons/${lessonSlug}`);
                   setIsSidebarOpen(false);
                 }}
               />
@@ -79,9 +81,8 @@ export default function LessonViewerClient({
             <LessonList
               course={course}
               currentLessonId={lesson.id}
-              canAccess={canAccess}
               onLessonClick={(lessonSlug) =>
-                router.push(`/courses/${course.slug}/lessons/${lessonSlug}`)
+                router.push(`/courses/${courseSlug}/lessons/${lessonSlug}`)
               }
             />
           </div>
@@ -94,20 +95,12 @@ export default function LessonViewerClient({
             {isLocked ? (
               <div className="text-center text-white space-y-4 p-8">
                 <div className="text-6xl">🔒</div>
-                <h3 className="text-2xl font-semibold">
-                  {accessReason === "not_enrolled" ? "Enroll to Access" : "Lesson Locked"}
-                </h3>
+                <h3 className="text-2xl font-semibold">Lesson Locked</h3>
                 <p className="text-gray-400 max-w-md">
-                  {accessReason === "not_enrolled"
-                    ? "Enroll in this course to unlock all lessons and start learning."
-                    : "This lesson is part of the premium content."}
+                  This lesson is part of the premium content. Enroll in the course to unlock all lessons.
                 </p>
-                <Button
-                  variant="brand"
-                  size="lg"
-                  onClick={() => router.push(`/courses/${course.slug}`)}
-                >
-                  {accessReason === "not_enrolled" ? "Enroll Now" : "View Course Details"}
+                <Button variant="brand" size="lg">
+                  Enroll Now to Unlock
                 </Button>
               </div>
             ) : (
@@ -130,7 +123,7 @@ export default function LessonViewerClient({
               {/* Lesson Header */}
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  {lesson.isFree && canAccess && (
+                  {isFree && !isLocked && (
                     <span className="text-xs font-medium text-success bg-success/10 px-2 py-1 rounded-full">
                       Free
                     </span>
@@ -146,7 +139,7 @@ export default function LessonViewerClient({
               </div>
 
               {/* Lesson Content Body */}
-              {lesson.content && canAccess && (
+              {lesson.content && !isLocked && (
                 <Card variant="default">
                   <CardContent className="p-6">
                     <div className="prose prose-invert max-w-none">
@@ -157,12 +150,12 @@ export default function LessonViewerClient({
               )}
 
               {/* Resources */}
-              {lesson.resources && lesson.resources.length > 0 && canAccess && (
+              {lesson.resources && lesson.resources.length > 0 && !isLocked && (
                 <Card variant="default">
                   <CardContent className="p-6">
                     <h3 className="font-semibold mb-4">Lesson Resources</h3>
                     <div className="space-y-3">
-                      {lesson.resources.map((resource: any) => (
+                      {lesson.resources.map((resource) => (
                         <a
                           key={resource.id}
                           href={resource.url}
@@ -198,7 +191,7 @@ export default function LessonViewerClient({
                     <Button
                       variant="outline"
                       onClick={() =>
-                        router.push(`/courses/${course.slug}/lessons/${previousLesson.slug}`)
+                        router.push(`/courses/${courseSlug}/lessons/${previousLesson.slug}`)
                       }
                       disabled={isLocked}
                     >
@@ -211,7 +204,7 @@ export default function LessonViewerClient({
                     <Button
                       variant={nextLesson.isLocked ? "outline" : "brand"}
                       onClick={() =>
-                        router.push(`/courses/${course.slug}/lessons/${nextLesson.slug}`)
+                        router.push(`/courses/${courseSlug}/lessons/${nextLesson.slug}`)
                       }
                       disabled={isLocked}
                     >
@@ -232,12 +225,10 @@ export default function LessonViewerClient({
 function LessonList({
   course,
   currentLessonId,
-  canAccess,
   onLessonClick,
 }: {
   course: any;
   currentLessonId: string;
-  canAccess: boolean;
   onLessonClick: (slug: string) => void;
 }) {
   return (
@@ -253,7 +244,7 @@ function LessonList({
       <div className="space-y-1">
         {course.lessons.map((lesson: any) => {
           const isActive = lesson.id === currentLessonId;
-          const isLocked = lesson.isLocked && !lesson.isFree;
+          const isLocked = lesson.isLocked;
           const isFree = lesson.isFree;
 
           return (
