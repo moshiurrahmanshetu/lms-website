@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,8 +10,11 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { FormField } from "@/components/ui/form-field";
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -62,11 +66,37 @@ export default function RegisterPage() {
     return !newErrors.name && !newErrors.email && !newErrors.password && !newErrors.confirmPassword;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    
     if (validateForm()) {
-      // Handle registration logic here
-      console.log("Register form submitted", formData);
+      setIsLoading(true);
+      try {
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          setError(data.error || 'Registration failed');
+        } else {
+          router.push('/auth/login');
+        }
+      } catch (error) {
+        setError('An error occurred. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -88,6 +118,11 @@ export default function RegisterPage() {
         </CardHeader>
 
         <CardContent>
+          {error && (
+            <div className="mb-4 p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg">
+              {error}
+            </div>
+          )}
           <form onSubmit={handleSubmit} className="space-y-4">
             <FormField
               label="Full Name"
@@ -186,8 +221,8 @@ export default function RegisterPage() {
               </label>
             </div>
 
-            <Button type="submit" variant="brand" size="lg" className="w-full">
-              Create Account
+            <Button type="submit" variant="brand" size="lg" className="w-full" disabled={isLoading}>
+              {isLoading ? "Creating account..." : "Create Account"}
             </Button>
           </form>
 

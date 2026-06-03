@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +11,10 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { FormField } from "@/components/ui/form-field";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -41,11 +46,30 @@ export default function LoginPage() {
     return !newErrors.email && !newErrors.password;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    
     if (validateForm()) {
-      // Handle login logic here
-      console.log("Login form submitted", formData);
+      setIsLoading(true);
+      try {
+        const result = await signIn("credentials", {
+          email: formData.email,
+          password: formData.password,
+          redirect: false,
+        });
+
+        if (result?.error) {
+          setError("Invalid email or password");
+        } else if (result?.ok) {
+          router.push("/dashboard");
+          router.refresh();
+        }
+      } catch (error) {
+        setError("An error occurred. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -67,6 +91,11 @@ export default function LoginPage() {
         </CardHeader>
 
         <CardContent>
+          {error && (
+            <div className="mb-4 p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg">
+              {error}
+            </div>
+          )}
           <form onSubmit={handleSubmit} className="space-y-4">
             <FormField
               label="Email"
@@ -119,8 +148,8 @@ export default function LoginPage() {
               </Link>
             </div>
 
-            <Button type="submit" variant="brand" size="lg" className="w-full">
-              Sign In
+            <Button type="submit" variant="brand" size="lg" className="w-full" disabled={isLoading}>
+              {isLoading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
 
