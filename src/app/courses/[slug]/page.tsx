@@ -1,31 +1,44 @@
-"use client";
-
 import React from "react";
-import { useParams } from "next/navigation";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { sampleCourses, sampleInstructors } from "@/data/sampleCourses";
-import { getCourseBySlug, formatPrice, calculateDiscount, formatDuration, calculateLiveClassEnrollment, formatLiveClassDate, formatLiveClassTime } from "@/lib/helpers/courseHelpers";
+import { getCourseBySlug } from "@/lib/queries/course-queries";
+import { formatPrice, calculateDiscount, formatDuration } from "@/lib/helpers/courseHelpers";
+import { notFound } from "next/navigation";
 
-export default function CourseDetailsPage() {
-  const params = useParams();
-  const slug = params.slug as string;
-  const course = getCourseBySlug(sampleCourses, slug);
+export default async function CourseDetailsPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const course = await getCourseBySlug(params.slug);
 
   if (!course) {
-    return (
-      <div className="container py-16 text-center">
-        <h1 className="text-2xl font-bold mb-4">Course Not Found</h1>
-        <p className="text-muted-foreground">The course you're looking for doesn't exist.</p>
-      </div>
-    );
+    notFound();
   }
 
-  const instructor = sampleInstructors.find((inst) => inst.id === course.instructorId);
+  const instructor = course.instructor;
   const upcomingLiveClasses = course.liveClasses?.filter(
-    (lc) => lc.status === "scheduled" && new Date(lc.scheduledAt) > new Date()
+    (lc) => new Date(lc.scheduledAt) > new Date()
   );
+
+  // Parse tags from JSON string
+  const tags = typeof course.tags === 'string' ? JSON.parse(course.tags) : course.tags;
+  
+  // Parse learning objectives from Text field
+  const learningObjectives = course.learningObjectives 
+    ? course.learningObjectives.split('\n').filter((obj: string) => obj.trim())
+    : [];
+  
+  // Parse requirements from Text field
+  const requirements = course.requirements
+    ? course.requirements.split('\n').filter((req: string) => req.trim())
+    : [];
+  
+  // Parse target audience from Text field
+  const targetAudience = course.targetAudience
+    ? course.targetAudience.split('\n').filter((aud: string) => aud.trim())
+    : [];
 
   return (
     <div className="flex flex-col">
@@ -73,7 +86,7 @@ export default function CourseDetailsPage() {
               </div>
 
               <div className="flex flex-wrap gap-2">
-                {course.tags.map((tag) => (
+                {tags.map((tag: string) => (
                   <span
                     key={tag}
                     className="text-sm text-muted-foreground bg-background border border-border px-3 py-1 rounded-full"
@@ -165,19 +178,21 @@ export default function CourseDetailsPage() {
           {/* Left Content */}
           <div className="lg:col-span-2 space-y-12">
             {/* What You'll Learn */}
-            <section>
-              <Heading level="h2" size="xl" className="mb-6">
-                What You'll Learn
-              </Heading>
-              <div className="grid md:grid-cols-2 gap-4">
-                {course.learningObjectives.map((objective, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <span className="text-success mt-1">✓</span>
-                    <span className="text-muted-foreground">{objective}</span>
-                  </div>
-                ))}
-              </div>
-            </section>
+            {learningObjectives.length > 0 && (
+              <section>
+                <Heading level="h2" size="xl" className="mb-6">
+                  What You'll Learn
+                </Heading>
+                <div className="grid md:grid-cols-2 gap-4">
+                  {learningObjectives.map((objective: string, index: number) => (
+                    <div key={index} className="flex items-start gap-3">
+                      <span className="text-success mt-1">✓</span>
+                      <span className="text-muted-foreground">{objective}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
 
             {/* Course Content */}
             <section>
@@ -241,13 +256,13 @@ export default function CourseDetailsPage() {
             </section>
 
             {/* Requirements */}
-            {course.requirements.length > 0 && (
+            {requirements.length > 0 && (
               <section>
                 <Heading level="h2" size="xl" className="mb-6">
                   Requirements
                 </Heading>
                 <ul className="space-y-2">
-                  {course.requirements.map((requirement, index) => (
+                  {requirements.map((requirement: string, index: number) => (
                     <li key={index} className="flex items-start gap-3 text-muted-foreground">
                       <span className="text-brand mt-1">•</span>
                       <span>{requirement}</span>
@@ -258,13 +273,13 @@ export default function CourseDetailsPage() {
             )}
 
             {/* Target Audience */}
-            {course.targetAudience.length > 0 && (
+            {targetAudience.length > 0 && (
               <section>
                 <Heading level="h2" size="xl" className="mb-6">
                   Who This Course Is For
                 </Heading>
                 <ul className="space-y-2">
-                  {course.targetAudience.map((audience, index) => (
+                  {targetAudience.map((audience: string, index: number) => (
                     <li key={index} className="flex items-start gap-3 text-muted-foreground">
                       <span className="text-brand mt-1">•</span>
                       <span>{audience}</span>
@@ -285,33 +300,13 @@ export default function CourseDetailsPage() {
                     <div className="flex gap-6">
                       {/* Avatar */}
                       <div className="w-24 h-24 rounded-full bg-gradient-to-br from-brand to-brand-light flex items-center justify-center text-white font-bold text-3xl flex-shrink-0">
-                        {instructor.name.charAt(0)}
+                        {instructor.name?.charAt(0) || 'I'}
                       </div>
 
                       {/* Info */}
                       <div className="flex-1 space-y-2">
-                        <h3 className="text-xl font-semibold">{instructor.name}</h3>
-                        <p className="text-muted-foreground text-sm">{instructor.bio}</p>
-                        <div className="flex flex-wrap gap-4 text-sm">
-                          <div className="flex items-center gap-1">
-                            <span className="text-yellow-500">⭐</span>
-                            <span className="font-medium">{instructor.averageRating}</span>
-                          </div>
-                          <div className="text-muted-foreground">
-                            {instructor.totalStudents.toLocaleString()} students
-                          </div>
-                          <div className="text-muted-foreground">{instructor.totalCourses} courses</div>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {instructor.expertise.slice(0, 3).map((skill) => (
-                            <span
-                              key={skill}
-                              className="text-xs text-muted-foreground bg-secondary px-2 py-1 rounded"
-                            >
-                              {skill}
-                            </span>
-                          ))}
-                        </div>
+                        <h3 className="text-xl font-semibold">{instructor.name || 'Instructor'}</h3>
+                        <p className="text-muted-foreground text-sm">{instructor.email}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -342,8 +337,8 @@ export default function CourseDetailsPage() {
                               {liveClass.description}
                             </p>
                             <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                              <span>📅 {formatLiveClassDate(liveClass.scheduledAt)}</span>
-                              <span>⏰ {formatLiveClassTime(liveClass.scheduledAt)}</span>
+                              <span>📅 {new Date(liveClass.scheduledAt).toLocaleDateString()}</span>
+                              <span>⏰ {new Date(liveClass.scheduledAt).toLocaleTimeString()}</span>
                               <span>⏱️ {formatDuration(liveClass.duration)}</span>
                             </div>
                             <div className="flex items-center gap-4">
@@ -351,7 +346,7 @@ export default function CourseDetailsPage() {
                                 <div className="w-full bg-secondary rounded-full h-2">
                                   <div
                                     className="bg-brand h-2 rounded-full"
-                                    style={{ width: `${calculateLiveClassEnrollment(liveClass)}%` }}
+                                    style={{ width: `${Math.round((liveClass.enrolledCount / liveClass.maxCapacity) * 100)}%` }}
                                   ></div>
                                 </div>
                                 <div className="text-xs text-muted-foreground mt-1">

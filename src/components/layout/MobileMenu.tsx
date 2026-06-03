@@ -89,12 +89,16 @@ const MobileMenu = ({ isOpen, onClose, links }: MobileMenuProps) => {
                   <span className="text-sm text-muted-foreground">Theme</span>
                   <ThemeToggle />
                 </div>
-                <Button variant="outline" size="sm" className="w-full" onClick={onClose}>
-                  Sign In
-                </Button>
-                <Button variant="brand-gradient" size="sm" className="w-full" onClick={onClose}>
-                  Get Started
-                </Button>
+                <Link href="/auth/login" onClick={onClose}>
+                  <Button variant="outline" size="sm" className="w-full">
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href="/auth/register" onClick={onClose}>
+                  <Button variant="brand-gradient" size="sm" className="w-full">
+                    Get Started
+                  </Button>
+                </Link>
               </div>
             </div>
           </motion.div>

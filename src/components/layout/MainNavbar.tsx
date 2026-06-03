@@ -86,12 +86,16 @@ const MainNavbar = () => {
         {/* Desktop CTA */}
         <div className="hidden md:flex md:items-center md:space-x-3">
           <ThemeToggle />
-          <Button variant="ghost" size="sm">
-            Sign In
-          </Button>
-          <Button variant="brand-gradient" size="sm">
-            Get Started
-          </Button>
+          <Link href="/auth/login">
+            <Button variant="ghost" size="sm">
+              Sign In
+            </Button>
+          </Link>
+          <Link href="/auth/register">
+            <Button variant="brand-gradient" size="sm">
+              Get Started
+            </Button>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}

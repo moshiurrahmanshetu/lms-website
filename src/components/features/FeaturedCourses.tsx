@@ -5,11 +5,32 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { featuredCourses } from "@/constants/homepage";
 import { staggerContainer, staggerItem } from "@/lib/animations/presets";
 import { Star, Clock, Users, BookOpen } from "lucide-react";
+import { formatPrice, formatDuration } from "@/lib/helpers/courseHelpers";
 
-const FeaturedCourses = () => {
+interface Course {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  thumbnail: string | null;
+  category: string;
+  level: string;
+  price: number;
+  rating: number;
+  enrolledCount: number;
+  duration: number;
+  instructor: {
+    name: string | null;
+  };
+}
+
+interface FeaturedCoursesProps {
+  courses: Course[];
+}
+
+const FeaturedCourses = ({ courses }: FeaturedCoursesProps) => {
   return (
     <section className="section-py">
       <div className="container">
@@ -40,7 +61,7 @@ const FeaturedCourses = () => {
           variants={staggerContainer}
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          {featuredCourses.map((course, index) => (
+          {courses.map((course, index) => (
             <motion.div key={course.id} variants={staggerItem}>
               <Card
                 variant="glass"
@@ -49,7 +70,7 @@ const FeaturedCourses = () => {
                 {/* Image Section */}
                 <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-brand-100 to-violet-100 dark:from-slate-800 dark:to-slate-700">
                   <Image
-                    src={course.thumbnail}
+                    src={course.thumbnail || "/img/developer.jpg"}
                     alt={course.title}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -64,7 +85,7 @@ const FeaturedCourses = () => {
                     <span className="px-3 py-1 text-xs font-medium bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-full text-brand-600 dark:text-brand-400 shadow-sm">
                       {course.category}
                     </span>
-                    <span className="px-3 py-1 text-xs font-medium bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-full text-foreground shadow-sm">
+                    <span className="px-3 py-1 text-xs font-medium bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-full text-foreground shadow-sm capitalize">
                       {course.level}
                     </span>
                   </div>
@@ -89,7 +110,7 @@ const FeaturedCourses = () => {
                     </div>
                     <div className="flex items-center gap-1 text-muted-foreground">
                       <Users className="h-4 w-4" />
-                      <span>{course.students.toLocaleString()}</span>
+                      <span>{course.enrolledCount.toLocaleString()}</span>
                     </div>
                   </div>
 
@@ -97,11 +118,11 @@ const FeaturedCourses = () => {
                   <div className="flex items-center justify-between text-sm text-muted-foreground pt-2 border-t border-border/50">
                     <span className="flex items-center gap-1">
                       <Users className="h-4 w-4" />
-                      {course.instructor}
+                      {course.instructor.name || 'Instructor'}
                     </span>
                     <span className="flex items-center gap-1">
                       <Clock className="h-4 w-4" />
-                      {course.duration}
+                      {formatDuration(course.duration)}
                     </span>
                   </div>
                 </CardContent>
@@ -109,7 +130,7 @@ const FeaturedCourses = () => {
                 <CardFooter className="p-6 pt-0 flex items-center justify-between">
                   <div className="flex flex-col">
                     <span className="text-xs text-muted-foreground">Price</span>
-                    <span className="text-2xl font-bold text-foreground">${course.price}</span>
+                    <span className="text-2xl font-bold text-foreground">{formatPrice(course.price)}</span>
                   </div>
                   <Button
                     variant="brand-gradient"

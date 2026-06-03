@@ -1,53 +1,34 @@
-"use client";
-
 import React from "react";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import DashboardShell from "@/components/dashboard/DashboardShell";
-import { sampleCourses } from "@/data/sampleCourses";
-import { formatPrice, formatDuration, calculateCourseProgress } from "@/lib/helpers/courseHelpers";
+import { getUserEnrollments, getUserUpcomingLiveClasses, getUserCertificates, getUserDashboardStats, getUserProfile } from "@/lib/queries/course-queries";
+import { formatDuration } from "@/lib/helpers/courseHelpers";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
-export default function DashboardPage() {
-  // Mock enrolled courses with progress
-  const enrolledCourses = sampleCourses.slice(0, 2).map((course) => ({
-    ...course,
-    progress: Math.floor(Math.random() * 100),
-    lastAccessed: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
-    completedLessons: Math.floor(Math.random() * course.totalLessons),
-  }));
+export default async function DashboardPage() {
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id;
 
-  // Mock upcoming live classes
-  const upcomingLiveClasses = [
-    {
-      id: "1",
-      title: "Advanced React Patterns",
-      instructor: "Sarah Johnson",
-      date: "Dec 15, 2024",
-      time: "2:00 PM EST",
-      thumbnail: "/live/react-patterns.jpg",
-      enrolled: true,
-    },
-    {
-      id: "2",
-      title: "Figma Design Workshop",
-      instructor: "Michael Chen",
-      date: "Dec 18, 2024",
-      time: "11:00 AM EST",
-      thumbnail: "/live/figma-workshop.jpg",
-      enrolled: false,
-    },
-  ];
+  if (!userId) {
+    return (
+      <div className="p-6 lg:p-8">
+        <p className="text-muted-foreground">Please sign in to view your dashboard.</p>
+      </div>
+    );
+  }
 
-  // Mock certificates
-  const certificates = [
-    {
-      id: "1",
-      courseTitle: "Web Development Fundamentals",
-      issuedDate: "Nov 15, 2024",
-      certificateUrl: "/certificates/web-dev.pdf",
-    },
-  ];
+  const [enrollments, upcomingLiveClasses, certificates, stats, user] = await Promise.all([
+    getUserEnrollments(userId),
+    getUserUpcomingLiveClasses(userId),
+    getUserCertificates(userId),
+    getUserDashboardStats(userId),
+    getUserProfile(userId),
+  ]);
+
+  const userName = user?.name || "User";
 
   return (
     <DashboardShell>
@@ -55,7 +36,7 @@ export default function DashboardPage() {
         {/* Welcome Header */}
         <div>
           <Heading level="h1" size="display">
-            Welcome back, John! 👋
+            Welcome back, {userName}! 👋
           </Heading>
           <p className="text-muted-foreground mt-2">
             Continue your learning journey. You're making great progress!
@@ -69,7 +50,7 @@ export default function DashboardPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Enrolled Courses</p>
-                  <p className="text-3xl font-bold mt-1">{enrolledCourses.length}</p>
+                  <p className="text-3xl font-bold mt-1">{stats.enrolledCourses}</p>
                 </div>
                 <div className="text-4xl">📚</div>
               </div>
@@ -81,7 +62,7 @@ export default function DashboardPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Completed</p>
-                  <p className="text-3xl font-bold mt-1">1</p>
+                  <p className="text-3xl font-bold mt-1">{stats.completedCourses}</p>
                 </div>
                 <div className="text-4xl">✅</div>
               </div>
@@ -93,7 +74,7 @@ export default function DashboardPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Hours Learned</p>
-                  <p className="text-3xl font-bold mt-1">24</p>
+                  <p className="text-3xl font-bold mt-1">{stats.hoursLearned}</p>
                 </div>
                 <div className="text-4xl">⏱️</div>
               </div>
@@ -105,7 +86,7 @@ export default function DashboardPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Certificates</p>
-                  <p className="text-3xl font-bold mt-1">{certificates.length}</p>
+                  <p className="text-3xl font-bold mt-1">{stats.certificates}</p>
                 </div>
                 <div className="text-4xl">🏆</div>
               </div>
@@ -125,46 +106,51 @@ export default function DashboardPage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            {enrolledCourses.map((course) => (
-              <Card key={course.id} variant="elevated" className="group hover:shadow-xl transition-all duration-300">
-                <CardContent className="p-6">
-                  <div className="flex gap-4">
-                    {/* Thumbnail */}
-                    <div className="w-32 h-24 bg-secondary rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-4xl">📚</span>
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1 min-w-0 space-y-2">
-                      <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-brand transition-colors">
-                        {course.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground line-clamp-1">
-                        {course.instructor?.name}
-                      </p>
-
-                      {/* Progress Bar */}
-                      <div className="space-y-1">
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="text-muted-foreground">Progress</span>
-                          <span className="font-medium">{course.progress}%</span>
-                        </div>
-                        <div className="w-full bg-secondary rounded-full h-2">
-                          <div
-                            className="bg-brand h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${course.progress}%` }}
-                          ></div>
-                        </div>
+            {enrollments.slice(0, 4).map((enrollment) => {
+              const course = enrollment.course;
+              const progress = enrollment.progress?.progressPercentage || 0;
+              
+              return (
+                <Card key={enrollment.id} variant="elevated" className="group hover:shadow-xl transition-all duration-300">
+                  <CardContent className="p-6">
+                    <div className="flex gap-4">
+                      {/* Thumbnail */}
+                      <div className="w-32 h-24 bg-secondary rounded-lg flex items-center justify-center flex-shrink-0">
+                        <span className="text-4xl">📚</span>
                       </div>
 
-                      <Button variant="brand" size="sm" className="w-full">
-                        Continue
-                      </Button>
+                      {/* Content */}
+                      <div className="flex-1 min-w-0 space-y-2">
+                        <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-brand transition-colors">
+                          {course.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground line-clamp-1">
+                          {course.instructor?.name}
+                        </p>
+
+                        {/* Progress Bar */}
+                        <div className="space-y-1">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-muted-foreground">Progress</span>
+                            <span className="font-medium">{progress}%</span>
+                          </div>
+                          <div className="w-full bg-secondary rounded-full h-2">
+                            <div
+                              className="bg-brand h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${progress}%` }}
+                            ></div>
+                          </div>
+                        </div>
+
+                        <Button variant="brand" size="sm" className="w-full">
+                          Continue
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </section>
 
@@ -180,39 +166,45 @@ export default function DashboardPage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            {upcomingLiveClasses.map((liveClass) => (
-              <Card key={liveClass.id} variant="elevated" className="group hover:shadow-xl transition-all duration-300">
-                <CardContent className="p-6">
-                  <div className="flex gap-4">
-                    {/* Thumbnail */}
-                    <div className="w-32 h-24 bg-secondary rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-4xl">🎥</span>
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1 min-w-0 space-y-2">
-                      <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-brand transition-colors">
-                        {liveClass.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {liveClass.instructor}
-                      </p>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span>📅 {liveClass.date}</span>
-                        <span>⏰ {liveClass.time}</span>
+            {upcomingLiveClasses.slice(0, 4).map((liveClass) => {
+              const isEnrolled = liveClass.enrollments.length > 0;
+              const date = new Date(liveClass.scheduledAt);
+              const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              
+              return (
+                <Card key={liveClass.id} variant="elevated" className="group hover:shadow-xl transition-all duration-300">
+                  <CardContent className="p-6">
+                    <div className="flex gap-4">
+                      {/* Thumbnail */}
+                      <div className="w-32 h-24 bg-secondary rounded-lg flex items-center justify-center flex-shrink-0">
+                        <span className="text-4xl">🎥</span>
                       </div>
-                      <Button
-                        variant={liveClass.enrolled ? "outline" : "brand"}
-                        size="sm"
-                        className="w-full"
-                      >
-                        {liveClass.enrolled ? "Registered" : "Register Now"}
-                      </Button>
+
+                      {/* Content */}
+                      <div className="flex-1 min-w-0 space-y-2">
+                        <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-brand transition-colors">
+                          {liveClass.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {liveClass.course.instructor.name}
+                        </p>
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          <span>📅 {date.toLocaleDateString()}</span>
+                          <span>⏰ {time}</span>
+                        </div>
+                        <Button
+                          variant={isEnrolled ? "outline" : "brand"}
+                          size="sm"
+                          className="w-full"
+                        >
+                          {isEnrolled ? "Registered" : "Register Now"}
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </section>
 
@@ -236,9 +228,9 @@ export default function DashboardPage() {
                       🏆
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg">{certificates[0].courseTitle}</h3>
+                      <h3 className="font-semibold text-lg">{certificates[0].course.title}</h3>
                       <p className="text-sm text-muted-foreground">
-                        Issued on {certificates[0].issuedDate}
+                        Issued on {new Date(certificates[0].issuedAt).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
